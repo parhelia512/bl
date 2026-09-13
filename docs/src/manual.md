@@ -787,6 +787,8 @@ An enumerator can be used as a definition of bit flags by adding #flags directiv
 
 Enumerators marked as flags are also serialized as a combination of atomic flags instead of just one value.
 
+Default initialization value for flags is 0.
+
 ```bl
 @@@examples/enum_flags.bl
 ```

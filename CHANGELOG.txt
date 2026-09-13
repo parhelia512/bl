@@ -18,6 +18,7 @@ master
 - Fix enum type propagation in polymorph instances.
 - Fix missing check for function pointer dereference.
 - Fix broken defer unwind on break and continue inside loop.
+- Fix enum flags using first variation as default value, now it's 0.
 
 [Modules]
 
@@ -26,6 +27,7 @@ thread2:
 
 string:
 - Add `str_make_temporary`.
+- Add `str_find`.
 
 extra/sdl3
 - Upgrade to 3.4.14.

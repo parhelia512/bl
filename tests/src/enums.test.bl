@@ -64,8 +64,7 @@ enum_flags_1 :: fn () #test {
 		A; B; C; D;
 	};
 	f: F;
-	test_eq(f, F.A);
-	test_eq(cast(s32)f, 1);
+	test_eq(cast(s32)f, 0);
 	test_eq(cast(s32)F.A, 0b1);
 	test_eq(cast(s32)F.B, 0b10);
 	test_eq(cast(s32)F.C, 0b100);
@@ -90,8 +89,7 @@ enum_flags_3 :: fn () #test {
 		A; B; C; D = B | C; E;
 	};
 	f: F;
-	test_eq(f, F.A);
-	test_eq(cast(s32)f, 1);
+	test_eq(cast(s32)f, 0);
 	test_eq(cast(s32)F.A, 0b0001);
 	test_eq(cast(s32)F.B, 0b0010);
 	test_eq(cast(s32)F.C, 0b0100);

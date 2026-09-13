@@ -861,6 +861,24 @@ is_digit :: fn (c: u8, base := FmtIntBase.DEC) bool #inline {
 	return false;
 }
 
+/// Finds start index of `subject` substring in `str`. Returns 0 in case subject.len is 0 and -1 in case subject was
+/// not found.
+str_find :: fn (str: string_view, subject: string_view) s32 {
+	if subject.len == 0      then return 0;
+	if subject.len > str.len then return -1;
+	loop i := 0; i <= str.len - subject.len; i += 1 {
+		match := true;
+		loop j := 0; j < subject.len; j += 1 {
+			if str[i+j] != subject[j] {
+				match = false;
+				break;
+			}
+		}
+		if match then return i;
+	}
+	return -1;
+}
+
 #scope_private
 #import "std/print"
 #import "std/math"

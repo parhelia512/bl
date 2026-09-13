@@ -3661,10 +3661,15 @@ struct mir_instr *create_default_value_for_type(struct context *ctx, struct mir_
 
 	switch (type->kind) {
 	case MIR_TYPE_ENUM: {
-		// Use first enum variant as default.
-		struct mir_type    *base_type = type->data.enm.base_type;
-		struct mir_variant *variant   = sarrpeek(type->data.enm.variants, 0);
-		default_value                 = create_instr_const_int(ctx, NULL, base_type, variant->value, false);
+		struct mir_type *base_type = type->data.enm.base_type;
+
+		if (type->data.enm.is_flags) {
+			default_value = create_instr_const_int(ctx, NULL, base_type, 0, false);
+		} else {
+			// Use first enum variant as default.
+			struct mir_variant *variant = sarrpeek(type->data.enm.variants, 0);
+			default_value               = create_instr_const_int(ctx, NULL, base_type, variant->value, false);
+		}
 		break;
 	}
 
@@ -9309,7 +9314,7 @@ struct result analyze_instr_block(struct context *ctx, struct mir_instr_block *b
 			if (block->base.node) {
 				if (block->last_instr && block->last_instr->kind == MIR_INSTR_DEFER_INSERT) {
 					struct mir_instr_defer_insert *defer_insert = (struct mir_instr_defer_insert *)block->last_instr;
-					defer_insert->break_parent_scope = NULL;
+					defer_insert->break_parent_scope            = NULL;
 				} else {
 					append_instr_defer_insert(ctx, block->base.node, NULL);
 				}

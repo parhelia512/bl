@@ -343,8 +343,9 @@ test_bprint_1 :: fn () #test {
 
 print_enum_1 :: fn () #test {
 	F :: enum #flags {
-		A = 0; B; C; D = B | C; E; F = D | E;
+		A; B; C; D = B | C; E; F = D | E;
 	};
+
 	a :: sprint("%", F.A);
 	defer str_terminate(&a);
 	test_eq(a, "F.A");
@@ -368,5 +369,11 @@ print_enum_1 :: fn () #test {
 	f :: sprint("%", F.F);
 	defer str_terminate(&f);
 	test_eq(f, "F.B | F.C | F.E");
+
+	enm: F;
+	g :: sprint("%", enm);
+	defer str_terminate(&g);
+	test_eq(g, "0");
+
 }
 
