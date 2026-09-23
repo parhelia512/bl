@@ -10,6 +10,12 @@ _SHUT_UP_BEGIN
 #include <llvm/IR/LLVMContext.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Type.h>
+#include <llvm/IR/PassManager.h>
+#include <llvm/Passes/PassBuilder.h>
+#include <llvm/Analysis/CGSCCPassManager.h>
+#include <llvm-c/Core.h>
+#include <llvm/IR/Function.h>
+#include <llvm/Support/CBindingWrapping.h>
 _SHUT_UP_END
 
 #include <mutex>
@@ -183,4 +189,41 @@ LLVMValueRef llvm_build_aligned_store(LLVMBuilderRef B, LLVMValueRef Val, LLVMVa
 
 void llvm_position_builder_at_end(LLVMBuilderRef B, LLVMBasicBlockRef Block) {
 	unwrap(B)->SetInsertPoint(unwrap(Block));
+}
+
+void llvm_opt_run_on_functions(LLVMModuleRef UNUSED(M), LLVMValueRef *fns, u32 fns_num, LLVMCodeGenOptLevel level) {
+	LoopAnalysisManager     LAM;
+	FunctionAnalysisManager FAM;
+	CGSCCAnalysisManager    CGAM;
+	ModuleAnalysisManager   MAM;
+
+	PassBuilder PB;
+	PB.registerModuleAnalyses(MAM);
+	PB.registerCGSCCAnalyses(CGAM);
+	PB.registerFunctionAnalyses(FAM);
+	PB.registerLoopAnalyses(LAM);
+	PB.crossRegisterProxies(LAM, FAM, CGAM, MAM);
+
+	OptimizationLevel opt = OptimizationLevel::O3;
+	switch (level) {
+	case LLVMCodeGenLevelNone:
+		opt = OptimizationLevel::O0;
+		break;
+	case LLVMCodeGenLevelDefault:
+		opt = OptimizationLevel::O2;
+		break;
+	case LLVMCodeGenLevelAggressive:
+		opt = OptimizationLevel::O3;
+		break;
+	default:
+		break;
+	}
+
+	FunctionPassManager FPM = PB.buildFunctionSimplificationPipeline(opt, ThinOrFullLTOPhase::None);
+
+	for (u32 i = 0; i < fns_num; ++i) {
+		Function *F = unwrap<Function>(fns[i]);
+		if (F->isDeclaration()) continue;
+		FPM.run(*F, FAM);
+	}
 }

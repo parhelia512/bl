@@ -859,6 +859,11 @@ LLVMValueRef emit_fn_proto(struct context *ctx, struct mir_fn *fn, bool schedule
 		LLVMAttributeRef llvm_attr = llvm_create_enum_attribute(ctx->llvm_cnt, LLVM_SANITIZE_ADDRESS, 0);
 		LLVMAddAttributeAtIndex(fn->llvm_value, (unsigned)LLVMAttributeFunctionIndex, llvm_attr);
 	}
+	if (ctx->assembly->target->opt == ASSEMBLY_OPT_DEBUG && isflag(fn->flags, FLAG_HOT)) {
+		bassert(fn->entry_block && "Hot marked function must have body.");
+		bassert(fn->llvm_value);
+		arrput(ctx->assembly->llvm.hot_fns, fn->llvm_value);
+	}
 	return fn->llvm_value;
 }
 

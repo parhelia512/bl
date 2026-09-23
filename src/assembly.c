@@ -159,7 +159,7 @@ static void llvm_init(struct assembly *assembly) {
 	default:
 		break;
 	}
-	LLVMTargetMachineRef llvm_tm = LLVMCreateTargetMachine(llvm_target, triple, cpu, features, opt_to_LLVM(assembly->target->opt), reloc_mode, LLVMCodeModelDefault);
+	LLVMTargetMachineRef llvm_tm = LLVMCreateTargetMachine(llvm_target, triple, cpu, features, opt_to_LLVM_opt_level(assembly->target->opt), reloc_mode, LLVMCodeModelDefault);
 	LLVMTargetDataRef    llvm_td = LLVMCreateTargetDataLayout(llvm_tm);
 	assembly->llvm.ctx           = llvm_context_create(llvm_td);
 	assembly->llvm.TM            = llvm_tm;
@@ -557,6 +557,7 @@ void assembly_delete(struct assembly *assembly) {
 	arrfree(assembly->lib_paths);
 	arrfree(assembly->testing.cases);
 	arrfree(assembly->units);
+	arrfree(assembly->llvm.hot_fns);
 
 	mtx_destroy(&assembly->units_lock);
 	mtx_destroy(&assembly->modules_lock);

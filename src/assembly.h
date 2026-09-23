@@ -219,6 +219,8 @@ struct assembly {
 		LLVMTargetDataRef    TD;
 		LLVMTargetMachineRef TM;
 		char                *triple;
+
+		array(LLVMValueRef) hot_fns;
 	} llvm;
 
 	struct {
@@ -345,7 +347,7 @@ static inline const char *opt_to_str(enum assembly_opt opt) {
 }
 
 // Convert opt level to LLVM.
-static inline LLVMCodeGenOptLevel opt_to_LLVM(enum assembly_opt opt) {
+static inline LLVMCodeGenOptLevel opt_to_LLVM_opt_level(enum assembly_opt opt) {
 	switch (opt) {
 	case ASSEMBLY_OPT_DEBUG:
 		return LLVMCodeGenLevelNone;

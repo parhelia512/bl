@@ -99,6 +99,9 @@ LLVMValueRef llvm_build_atomic_cmpxchg(LLVMBuilderRef B, LLVMValueRef Ptr, LLVMV
 LLVMValueRef llvm_build_atomic_load(LLVMBuilderRef B, LLVMTypeRef Ty, const u32 AlignmentBytes, LLVMValueRef Val, LLVMAtomicOrdering Ordering, const str_t Name);
 LLVMValueRef llvm_build_atomic_store(LLVMBuilderRef B, LLVMValueRef Src, LLVMValueRef Dst, const u32 AlignmentBytes, LLVMAtomicOrdering Ordering);
 
+// Optimization
+void llvm_opt_run_on_functions(LLVMModuleRef M, LLVMValueRef *fns, u32 fns_num, LLVMCodeGenOptLevel level);
+
 #ifdef __cplusplus
 }
 #endif

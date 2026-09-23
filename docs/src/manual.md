@@ -1649,6 +1649,10 @@ dont_use_cache :: fn (v: s32 #comptime, N: s32 #comptime) s32 #comptime #nocache
 }
 ```
 
+### hot
+
+Force compiler to optimize *hot* functions even in debug mode using `release-fast` mode optimizations.
+
 # Comments
 
 Simple documentation can be written directly into the code the same way as in other programming languages, simply by adding comments. The BL comments use the same syntax as in C. You can write a single-line comment or multi-line comment as needed. You can also write documentation directly into the code and let the compiler generate *markdown* files for you.
@@ -2643,6 +2647,7 @@ Report warning in compile-time.
 - `#extern` - See [here](manual.html#extern).
 - `#file` - Evaluates in `string_view` containing name of current file.
 - `#flags` - See [here](manual.html#Enum-Flags-Type).
+- `#hot` - See [here](manual.html#hot).
 - `#if` - See [here](manual.html#Static-If).
 - `#import` - See [here](manual.html#Import).
 - `#inline` - Mark function as inline.
